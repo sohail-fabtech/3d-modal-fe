@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "3D Modal",
-  description: "3d modal app for creating 3d models",
+  title: "3D Model Generator",
+  description: "3d model generator app for creating 3d models",
 };
 
 export default function RootLayout({

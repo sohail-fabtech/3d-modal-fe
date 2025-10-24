@@ -5,25 +5,25 @@ const API_KEY = "vibecoding" // Public API key
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { task_uuid } = body
+    const { subscription_key } = body
 
-    if (!task_uuid) {
-      return NextResponse.json({ error: "Missing task_uuid" }, { status: 400 })
+    if (!subscription_key) {
+      return NextResponse.json({ error: "Missing subscription_key" }, { status: 400 })
     }
 
-    const response = await fetch("https://hyperhuman.deemos.com/api/v2/download", {
+    const response = await fetch("https://hyperhuman.deemos.com/api/v2/status", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ task_uuid }),
+      body: JSON.stringify({ subscription_key }),
     })
 
     if (!response.ok) {
       const errorText = await response.text()
       return NextResponse.json(
-        { error: `Download failed: ${response.status}`, details: errorText },
+        { error: `Status check failed: ${response.status}`, details: errorText },
         { status: response.status },
       )
     }
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     const data = await response.json()
     return NextResponse.json(data)
   } catch (error) {
-    console.error("Error in Download API route:", error)
-    return NextResponse.json({ error: "Failed to download model" }, { status: 500 })
+    console.error("Error in Status API route:", error)
+    return NextResponse.json({ error: "Failed to check status" }, { status: 500 })
   }
 }
