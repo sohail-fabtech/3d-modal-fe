@@ -8,11 +8,13 @@ import { useForm } from "react-hook-form"
 import type * as z from "zod"
 import { Form as UIForm } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
-import { ImageIcon, SlidersHorizontal, ArrowUp } from "lucide-react"
+import { ImageIcon, SlidersHorizontal, ArrowUp, Mic } from "lucide-react"
 import AutoResizeTextarea from "./auto-resize-textarea"
 import ImageUploadArea from "./image-upload-area"
+import VoiceWaveform from "./voice-waveform"
 import { formSchema } from "@/features/editor/schema/form-schema"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { useVoiceInput } from "@/features/editor/hooks/use-voice-input"
 import { cn } from "@/lib/utils"
 
 interface FormProps {
@@ -31,6 +33,18 @@ export default function Form({ isLoading, onSubmit, onOpenOptions }: FormProps) 
   const formRef = useRef<HTMLFormElement>(null)
   const dragCounter = useRef(0)
   const isMobile = useMediaQuery("(max-width: 768px)")
+
+  // Voice input functionality
+  const { isRecording, isSupported, toggleRecording, error: voiceError } = useVoiceInput({
+    onTranscriptionComplete: (text: string) => {
+      const currentPrompt = form.getValues("prompt")
+      const newPrompt = currentPrompt ? `${currentPrompt} ${text}` : text
+      form.setValue("prompt", newPrompt)
+    },
+    onError: (error: string) => {
+      setError(error)
+    },
+  })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -197,17 +211,39 @@ export default function Form({ isLoading, onSubmit, onOpenOptions }: FormProps) 
                 </Button>
               </div>
 
-              <AutoResizeTextarea
-                placeholder="Generate 3D model..."
-                className="flex-1 bg-transparent border-0 focus:ring-0 text-white placeholder:text-gray-400 py-2 px-3 resize-none text-base tracking-normal"
-                {...form.register("prompt")}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                onKeyDown={handleKeyDown}
-                disabled={isLoading}
-              />
+              {isRecording ? (
+                <div className="flex-1 flex items-center justify-center py-2 px-3">
+                  <VoiceWaveform isRecording={isRecording} />
+                </div>
+              ) : (
+                <AutoResizeTextarea
+                  placeholder="Generate 3D model..."
+                  className="flex-1 bg-transparent border-0 focus:ring-0 text-white placeholder:text-gray-400 py-2 px-3 resize-none text-base tracking-normal"
+                  {...form.register("prompt")}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  onKeyDown={handleKeyDown}
+                  disabled={isLoading}
+                />
+              )}
 
-              <div>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  onClick={isSupported ? toggleRecording : undefined}
+                  className={cn(
+                    "rounded-full h-10 w-10 p-0 flex items-center justify-center transition-all duration-200",
+                    isRecording 
+                      ? "bg-red-500 hover:bg-red-600 text-white" 
+                      : "bg-white hover:bg-gray-200 text-black",
+                    !isSupported && "opacity-50 cursor-not-allowed"
+                  )}
+                  disabled={isLoading || (!isSupported && !isRecording)}
+                  title={isSupported ? (isRecording ? "Stop recording" : "Start voice input") : "Voice input not supported"}
+                >
+                  <Mic className="h-5 w-5" />
+                </Button>
+
                 <Button
                   type="submit"
                   className="bg-white hover:bg-gray-200 text-black rounded-full h-10 w-10 p-0 flex items-center justify-center"
@@ -227,6 +263,7 @@ export default function Form({ isLoading, onSubmit, onOpenOptions }: FormProps) 
         </div>
 
         {error && <div className="mt-2 text-red-400 text-sm tracking-normal">{error}</div>}
+        {voiceError && <div className="mt-2 text-red-400 text-sm tracking-normal">{voiceError}</div>}
       </form>
     </UIForm>
   )
