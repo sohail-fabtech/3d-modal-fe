@@ -1,7 +1,9 @@
+import Rodin from "@/features/editor/components/rodin"
+
 export default function Home() {
   return (
-    <main>
-      <h1>Home</h1>
-    </main>
+    <main className="h-[100dvh] w-screen overflow-hidden bg-black bg-radial-gradient">
+    <Rodin />
+  </main>
   );
 }
