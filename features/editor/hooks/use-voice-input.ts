@@ -36,16 +36,23 @@ export function useVoiceInput({
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition()
 
-  // Check if browser supports speech recognition
-  const isSupported = browserSupportsSpeechRecognition
+  // Check if browser supports speech recognition with HTTPS requirement
+  const isSupported = browserSupportsSpeechRecognition && 
+    (typeof window !== 'undefined' && 
+     (window.location.protocol === 'https:' || window.location.hostname === 'localhost'))
 
   // Handle speech recognition errors
   useEffect(() => {
-    if (!isSupported) {
+    if (!browserSupportsSpeechRecognition) {
       setError("Speech recognition is not supported in this browser")
       onError?.("Speech recognition is not supported in this browser")
+    } else if (typeof window !== 'undefined' && 
+               window.location.protocol !== 'https:' && 
+               window.location.hostname !== 'localhost') {
+      setError("Speech recognition requires HTTPS in production. Please use HTTPS to enable voice input.")
+      onError?.("Speech recognition requires HTTPS in production. Please use HTTPS to enable voice input.")
     }
-  }, [isSupported, onError])
+  }, [browserSupportsSpeechRecognition, onError])
 
   // Update recording state based on listening status
   useEffect(() => {
