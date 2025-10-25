@@ -239,7 +239,13 @@ export default function Form({ isLoading, onSubmit, onOpenOptions }: FormProps) 
                     !isSupported && "opacity-50 cursor-not-allowed"
                   )}
                   disabled={isLoading || (!isSupported && !isRecording)}
-                  title={isSupported ? (isRecording ? "Stop recording" : "Start voice input") : "Voice input not supported"}
+                  title={
+                    isSupported 
+                      ? (isRecording ? "Stop recording" : "Start voice input") 
+                      : voiceError?.includes("HTTPS") 
+                        ? "Voice input requires HTTPS in production"
+                        : "Voice input not supported"
+                  }
                 >
                   <Mic className="h-5 w-5" />
                 </Button>
