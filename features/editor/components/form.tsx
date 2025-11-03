@@ -236,9 +236,9 @@ export default function Form({ isLoading, onSubmit, onOpenOptions }: FormProps) 
                     isRecording 
                       ? "bg-red-500 hover:bg-red-600 text-white" 
                       : "bg-white hover:bg-gray-200 text-black",
-                    !isSupported && "opacity-50 cursor-not-allowed"
+                    // !isSupported && "opacity-50 cursor-not-allowed"
                   )}
-                  disabled={isLoading || (!isSupported && !isRecording)}
+                  // disabled={isLoading || (!isSupported && !isRecording)}
                   title={
                     isSupported 
                       ? (isRecording ? "Stop recording" : "Start voice input") 
