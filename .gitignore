@@ -40,3 +40,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AWS CDK
+cdk.out
+cdk.context.json
+
+# OpenNext
+.open-next
+
+# serverless
+.serverless
+
+# sst
+.sst

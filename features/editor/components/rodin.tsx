@@ -244,7 +244,7 @@ export default function Rodin() {
         {/* Logo in top left */}
         <div className="absolute top-6 left-6 pointer-events-auto">
           <h1 className="text-3xl text-white font-normal tracking-normal">3D Model Generator</h1>
-          <p className="text-gray-400 text-sm mt-1 tracking-normal">Powered by FabTechSol</p>
+          <p className="text-gray-400 text-sm mt-1 tracking-normal">Powered by Sohail Khan for demo purposes (For Hussain)</p>
         </div>
 
 

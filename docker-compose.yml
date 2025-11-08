@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  ui:
+    build: .
+    expose:
+      - 8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ui.rule=Host(`ui.dashboard.local`)"
+      - "traefik.http.routers.ui.tls=true"
+      - "traefik.http.services.ui.loadbalancer.server.port=8080"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
