@@ -1,18 +1,25 @@
-import { SSTConfig } from "sst";
-import { NextjsSite } from "sst/constructs";
+/// <reference path="./.sst/platform/config.d.ts" />
 
-export default {
-  config() {
+export default $config({
+  app(input) {
     return {
-      name: "nextjs-lambda-app",
-      region: "us-east-1", // or your preferred AWS region
+      name: "three-d-modal-fe",
+      removal: input?.stage === "production" ? "retain" : "remove",
+      home: "aws",
     };
   },
-  stacks(app) {
-    app.stack(function SiteStack({ stack }) {
-      new NextjsSite(stack, "NextApp", {
-        path: ".", // path to your Next.js app
-      });
-    });
+  async run() {
+    const sst = await import("sst");
+    
+    return {
+      site: new sst.aws.NextjsSite("Site", {
+        path: ".", // project root
+        // Add environment variables here
+        // environment: {
+        //   NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "",
+        //   DATABASE_URL: process.env.DATABASE_URL || "",
+        // },
+      }),
+    };
   },
-} satisfies SSTConfig;
+});

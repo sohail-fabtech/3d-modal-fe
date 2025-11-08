@@ -1,0 +1,36 @@
+myNextApplication:
+  component: "@sls-next/serverless-component"
+  inputs:
+    # Optional: configure a custom domain
+    # domain: ["example.com"]
+    
+    # Build configuration
+    build:
+      env:
+        NODE_ENV: production
+    
+    # Memory and timeout settings
+    memory: 1024
+    timeout: 30
+    
+    # Region
+    region: us-east-1
+    
+    # Environment variables (add your variables here)
+    # environment:
+    #   NEXT_PUBLIC_API_URL: ${env:NEXT_PUBLIC_API_URL}
+    #   DATABASE_URL: ${env:DATABASE_URL}
+    
+    # CloudFront configuration
+    cloudfront:
+      # Optional: Add CloudFront behaviors
+      # behaviors:
+      #   - pattern: "api/*"
+      #     cachePolicy: "Managed-CachingDisabled"
+    
+    # Lambda configuration
+    lambda:
+      # Optional: Increase memory for specific routes
+      # memory: 1024
+      # timeout: 30
+
